@@ -12,11 +12,13 @@ namespace algo_projet_final
         private string file_path;
         private string[] mots;
         private int numMots;
+        private string langue;
         
-        public Dictionnaire(string file_path)
+        public Dictionnaire(string file_path, string langue)
         {
-            //On sauvegarde le chemin du fichier
+            //On sauvegarde le chemin du fichier et sa langue
             this.file_path = file_path;
+            this.langue = langue;
 
             // On charge les mots du fichier
             StreamReader reader = new StreamReader(file_path);
@@ -38,7 +40,12 @@ namespace algo_projet_final
 
             mots = new string[numMots];
             int k = 0;
-            while(!reader.EndOfStream)
+
+            reader.Close();
+            // On relit le fichier pour remplir le tableau de mots
+            reader = new StreamReader(file_path);
+
+            while (!reader.EndOfStream)
             {
                 // Pour chaque ligne, on sépare les mots et on les ajoute à la liste
                 string ligne = reader.ReadLine();
@@ -55,12 +62,11 @@ namespace algo_projet_final
             reader.Close();
         }
 
-        public void Tri_quick_sor(int debut = 0, int fin = -1)
+        public void Tri_quick_sort(int debut = 0, int fin = int.MaxValue)
         {
             // On vérifie si il y a une erreur, si il faut initialiser fin et si le tableau est déjà trié
-            if (fin == -1) fin = numMots - 1;
-            if (debut >= fin || debut < 0) return;
-
+            if (fin == int.MaxValue) fin = numMots - 1;
+            if (debut > fin || fin - debut <= 1 || debut < 0) return;
             // On choisit le pivot
             int pivot_index = (debut + fin) / 2;
 
@@ -73,7 +79,7 @@ namespace algo_projet_final
             {
                 if (i == pivot_index) continue;
 
-                if (string.Compare(mots[i], mots[pivot_index]) < 0)
+                if (string.Compare(mots[i], mots[pivot_index]) <= 0)
                 {
                     // on ajoute au début du tableau temporaire
                     temp_tab[index_debut] = mots[i];
@@ -97,8 +103,35 @@ namespace algo_projet_final
             }
 
             // On trie les deux sous-tableaux
-            Tri_quick_sor(debut, debut + index_debut - 1);
-            Tri_quick_sor(debut + index_debut + 1, fin);
+            Tri_quick_sort(debut, debut + index_debut - 1);
+            Tri_quick_sort(debut + index_debut + 1, fin);
+        }
+
+        public string toString()
+        {
+            return $"Dictionnaire de langue {langue} contenant {numMots} mots.";
+        }
+
+        public bool RechDichoRecursif(string mot, int start = 0, int end = int.MaxValue)
+        {
+            // On initialise end si besoin et on vérifie les conditions sorties
+            if (end == int.MaxValue) end = numMots - 1;
+
+            if (start > end) return false;
+            else if (start == end) return mots[start] == mot.ToUpper();
+
+            // On calcule le milieu et on lance la recherche récursive
+            int mid_index = (start + end) / 2;
+
+            return RechDichoRecursif(mot, start, mid_index) || RechDichoRecursif(mot, mid_index + 1, end);
+        }
+
+        public void printMots()
+        {
+            for (int i = 0; i < numMots; i++)
+            {
+                Console.WriteLine(mots[i]);
+            }
         }
     }
 }
