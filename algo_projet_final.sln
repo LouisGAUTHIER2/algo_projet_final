@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.11.35312.102
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "algo_projet_final", "algo_projet_final\algo_projet_final.csproj", "{77496C4C-5BD2-404E-84FF-0FBF6C92EEEC}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{77496C4C-5BD2-404E-84FF-0FBF6C92EEEC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{77496C4C-5BD2-404E-84FF-0FBF6C92EEEC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{77496C4C-5BD2-404E-84FF-0FBF6C92EEEC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{77496C4C-5BD2-404E-84FF-0FBF6C92EEEC}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {7BE1C9FE-3091-49EA-95CC-F05D9F21151C}
+	EndGlobalSection
+EndGlobal
