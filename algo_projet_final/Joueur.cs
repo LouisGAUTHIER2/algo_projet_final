@@ -46,6 +46,11 @@ namespace algo_projet_final
             Console.WriteLine("Mots trouvés : " + (MotsTrouves.Count > 0 ? string.Join(", ", MotsTrouves) : "Aucun"));
             Console.WriteLine();
         }
+
+        public string toString()
+        {
+            return $"Nom: {Nom}, Score: {Score}, Mots Trouvés: {(MotsTrouves.Count > 0 ? string.Join(", ", MotsTrouves) : "Aucun")}";
+        }
     }
 }
 
