@@ -9,19 +9,17 @@ namespace algo_projet_final
 {
     internal class Dictionnaire
     {
-        private string file_path;
         private string[] mots;
         private int numMots;
         private string langue;
-        
-        public Dictionnaire(string file_path, string langue)
+
+        public Dictionnaire(string dic_file_path, string langue)
         {
             //On sauvegarde le chemin du fichier et sa langue
-            this.file_path = file_path;
             this.langue = langue;
 
             // On charge les mots du fichier
-            StreamReader reader = new StreamReader(file_path);
+            StreamReader reader = new StreamReader(dic_file_path);
 
             // On compte le nombre de mots dans le fichier
             numMots = 0;
@@ -43,7 +41,7 @@ namespace algo_projet_final
 
             reader.Close();
             // On relit le fichier pour remplir le tableau de mots
-            reader = new StreamReader(file_path);
+            reader = new StreamReader(dic_file_path);
 
             while (!reader.EndOfStream)
             {
