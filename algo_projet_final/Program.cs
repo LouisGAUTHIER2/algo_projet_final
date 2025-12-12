@@ -47,9 +47,12 @@ static void Main(string[] args)
         Dictionnaire dico = new Dictionnaire("Mots_Français.txt", "francais");
 
             // Remplace le chemin par l'endroit où tu as mis Lettres.txt
-            string cheminLettres = "Lettre.txt";
-        int nbLignes = 8;
-        int nbColonnes = 8;
+         string cheminLettres = "Lettre.txt";
+         int nbLignes ;
+         int nbColonnes ;
+         Console.WriteLine("Entrer la taille de votre grille ");
+         nbLignes = Convert.ToInt32(Console.ReadLine());
+         nbColonnes = nbLignes;
 
         // Création d'un plateau aléatoire
         Plateau p = new Plateau(cheminLettres, nbLignes, nbColonnes);
