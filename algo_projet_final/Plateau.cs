@@ -182,51 +182,68 @@ namespace algo_projet_final
             mot = mot.ToUpper();
             int len = mot.Length;
 
+            // Parcourt tout le plateau
             for (int i = 0; i < lignes; i++)
             {
                 for (int j = 0; j < colonnes; j++)
                 {
                     if (matrice[i, j] == mot[0])
                     {
-                        // Pour chaque direction : haut, bas, gauche, droite
-                        int[,] directions = new int[,]
-                        {
-                    {-1, 0}, // haut
-                    {1, 0},  // bas
-                    {0, -1}, // gauche
-                    {0, 1},  // droite
-                    {-1, -1},// diagonale haut-gauche
-                    {-1, 1}, // diagonale haut-droite
-                    {1, -1}, // diagonale bas-gauche
-                    {1, 1}   // diagonale bas-droite
-                        };
-                        for (int d = 0; d < directions.GetLength(0); d++)
-                        {
-                            int[,] positions = new int[len, 2];
-                            if (RechercheDirection(i, j, mot, 0, directions[d, 0], directions[d, 1], positions))
-                                return positions;
-                        }
+                        int[,] positions = new int[len, 2];
+                        bool[,] visite = new bool[lignes, colonnes];
+
+                        // On tente de suivre le mot depuis cette case
+                        if (ChercherDepuis(i, j, mot, 0, positions, visite))
+                            return positions;
                     }
                 }
             }
-            return null;
+
+            return null; // pas trouvé
         }
 
-        // Recherche récursive, évite de repasser sur la même case (sauf si tu veux permettre)
-        private bool RechercheDirection(int ligne, int col, string mot, int indexLettre, int dLigne, int dCol, int[,] positions)
+
+        private bool ChercherDepuis(int ligne, int col, string mot, int index, int[,] positions, bool[,] visite)
         {
-            if (indexLettre == mot.Length)
+            if (index == mot.Length)
                 return true;
+
+            // Conditions de base
             if (ligne < 0 || ligne >= lignes || col < 0 || col >= colonnes)
                 return false;
-            if (matrice[ligne, col] != mot[indexLettre])
+            if (visite[ligne, col])
+                return false;
+            if (matrice[ligne, col] != mot[index])
                 return false;
 
-            positions[indexLettre, 0] = ligne;
-            positions[indexLettre, 1] = col;
-            // On avance dans la direction choisie
-            return RechercheDirection(ligne + dLigne, col + dCol, mot, indexLettre + 1, dLigne, dCol, positions);
+            // On enregistre la position
+            visite[ligne, col] = true;
+            positions[index, 0] = ligne;
+            positions[index, 1] = col;
+
+            // Déplacements possibles : haut, bas, gauche, droite
+            int[,] dirs = {
+        {-1, 0},
+        { 1, 0},
+        { 0,-1},
+        { 0, 1}
+    };
+
+            // Essayer chaque direction
+            for (int k = 0; k < 4; k++)
+            {
+                int nl = ligne + dirs[k, 0];
+                int nc = col + dirs[k, 1];
+
+                if (ChercherDepuis(nl, nc, mot, index + 1, positions, visite))
+                    return true;
+            }
+
+            // Si aucun chemin ne marche, on annule cette case (backtrack)
+            visite[ligne, col] = false;
+            return false;
         }
+
 
 
 
