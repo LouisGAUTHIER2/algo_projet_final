@@ -38,6 +38,38 @@ namespace algo_projet_final
             while (nom2.ToLower() == nom1.ToLower());
 
 
+            // Remplace le chemin par l'endroit où tu as mis Lettres.txt
+            string cheminLettres = @"C:\Users\pefer\OneDrive\Documents\EsiLv\Algo projet\algo_projet_final\Lettre.txt";
+            int nbLignes = 8;
+            int nbColonnes = 8;
+
+            // Création d'un plateau aléatoire
+            Plateau p = new Plateau(cheminLettres, nbLignes, nbColonnes);
+
+            // Affichage du plateau dans la console
+            string choix = "1";
+
+            while (choix == "1")
+            {
+                Console.WriteLine("Plateau généré :");
+                Console.WriteLine("");
+                Console.WriteLine(p.ToString());
+
+                Console.WriteLine("\nAppuyez sur 1 pour régénérer la grille, ou sur une autre touche pour continuer le jeu :");
+                choix = Console.ReadLine();
+
+                if (choix == "1")
+                {
+                    p = new Plateau(cheminLettres, nbLignes, nbColonnes); 
+                }
+            }
+
+            // Ici on sort de la boucle → le jeu continue
+            Console.WriteLine("\nLe jeu commence...");
+
+            // Attend une touche pour fermer la fenêtre console
+            Console.WriteLine("Appuie sur une touche pour quitter...");
+
             Console.ReadKey();
         }
     }

@@ -32,7 +32,7 @@ namespace algo_projet_final
             else this.joueurActuel = joueur1;
         }
 
-        public bool MakePlayerMove(string mot)
+       /* public bool MakePlayerMove(string mot)
         {
             //if (joueurActuel.Contient(mot) || !dico.RechDichoRecursif(mot) || plateau.Recherche_Mot(mot)) return false;
 
@@ -42,6 +42,6 @@ namespace algo_projet_final
             //plateau.Maj_Plateau(mot);
 
             return true;
-        }
+        }*/
     }
 }
