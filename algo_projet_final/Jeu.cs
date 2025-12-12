@@ -34,11 +34,12 @@ namespace algo_projet_final
 
         public bool MakePlayerMove(string mot)
         {
-            if (joueurActuel.Contient(mot) || !dico.RechDichoRecursif(mot) || plateau.Recherche_Mot(mot)) return false;
+            //if (joueurActuel.Contient(mot) || !dico.RechDichoRecursif(mot) || plateau.Recherche_Mot(mot)) return false;
 
+            // On met à jour le score et les mots utilisés par le joueur si le coup est valide
             joueurActuel.Add_Mot(mot);
             joueurActuel.Add_Score(mot.Length);
-            plateau.Maj_Plateau(mot);
+            //plateau.Maj_Plateau(mot);
 
             return true;
         }
