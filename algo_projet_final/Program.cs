@@ -53,7 +53,7 @@ namespace algo_projet_final
 
                 if (choix == "1")
                 {
-                    p = new Plateau(cheminLettres, nbLignes, nbColonnes); // ou ta fonction de génération
+                    p = new Plateau(cheminLettres, nbLignes, nbColonnes); 
                 }
             }
 
