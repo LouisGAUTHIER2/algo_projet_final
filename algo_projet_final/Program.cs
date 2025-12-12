@@ -151,8 +151,33 @@ static void Main(string[] args)
             joueur1.AfficherInfos();
             joueur2.AfficherInfos();
 
-        // Attend une touche pour fermer la fenêtre console
-        Console.WriteLine("Appuyez sur une touche pour quitter...");
+            Thread.Sleep(3000);
+
+            Console.Clear();
+            Console.WriteLine();
+            Console.WriteLine("==== RÉSULTAT ====");
+            Console.WriteLine();
+
+            if (joueur1.Score > joueur2.Score)
+            {
+                Console.WriteLine($" Vainqueur : {joueur1.Nom} avec {joueur1.Score} points !");
+            }
+            else if (joueur2.Score > joueur1.Score)
+            {
+                Console.WriteLine($" Vainqueur : {joueur2.Nom} avec {joueur2.Score} points !");
+            }
+            else
+            {
+                Console.WriteLine(" Match nul ! Les deux joueurs sont à égalité.");
+            }
+
+            Console.WriteLine();
+            Console.WriteLine();
+            
+
+            // Attend une touche pour fermer la fenêtre console
+            Console.WriteLine("Appuyez sur une touche pour quitter...");
+
         Console.ReadKey();
     }
 }

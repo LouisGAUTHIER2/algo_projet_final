@@ -26,22 +26,11 @@ namespace algo_projet_final
 
         }
 
-        public void ChangePlayer()
+        /*public void ChangePlayer()
         {
             if (this.joueurActuel.Nom == joueur1.Nom) this.joueurActuel = joueur2;
             else this.joueurActuel = joueur1;
-        }
-
-       /* public bool MakePlayerMove(string mot)
-        {
-            //if (joueurActuel.Contient(mot) || !dico.RechDichoRecursif(mot) || plateau.Recherche_Mot(mot)) return false;
-
-            // On met à jour le score et les mots utilisés par le joueur si le coup est valide
-            joueurActuel.Add_Mot(mot);
-            joueurActuel.Add_Score(mot.Length);
-            //plateau.Maj_Plateau(mot);
-
-            return true;
         }*/
+
     }
 }
