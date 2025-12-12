@@ -44,8 +44,10 @@ static void Main(string[] args)
         Joueur joueur2 = new Joueur(nom2);
         joueurs.Add(joueur2);
 
-        // Remplace le chemin par l'endroit où tu as mis Lettres.txt
-        string cheminLettres = "Lettre.txt";
+        Dictionnaire dico = new Dictionnaire("Mots_Français.txt", "francais");
+
+            // Remplace le chemin par l'endroit où tu as mis Lettres.txt
+            string cheminLettres = "Lettre.txt";
         int nbLignes = 8;
         int nbColonnes = 8;
 
@@ -76,44 +78,63 @@ static void Main(string[] args)
         // Petite pause avant de commencer le jeu (1s)
             Thread.Sleep(1000);
 
-        int joueurIndex = 0;
+        int joueurI = 0;
 
-        while (true)
-        {
-            Console.Clear();
-            Console.WriteLine("Plateau actuel :");
-            Console.WriteLine();
-            Console.WriteLine(p.ToString());
-            Console.WriteLine($"\nC'est au tour de {joueurs[joueurIndex].Nom}.");
-
-            Console.Write("Entrez un mot à chercher (ou tapez 'exit' pour quitter) : ");
-            string mot = Console.ReadLine();
-            if (mot.ToLower() == "exit")
-                break;
-
-            if (mot.Length < 2)
+            while (true)
             {
-                Console.WriteLine("Le mot doit faire au moins 2 lettres.");
-                continue;
-            }
+                Console.Clear();
+                Console.WriteLine("Plateau actuel :");
+                Console.WriteLine();
+                Console.WriteLine(p.ToString());
+                Console.WriteLine($"\nC'est au tour de {joueurs[joueurI].Nom}.");
 
-            var resultat = p.Recherche_Mot(mot);
-            if (resultat != null)
-            {
-                Console.WriteLine($"Le mot \"{mot}\" est présent sur la grille !");
-            }
-            else
-            {
-                Console.WriteLine($"Le mot \"{mot}\" n'est PAS présent sur la grille.");
-            }
+                Console.Write("Entrez un mot à chercher (ou tapez 'exit' pour quitter) : ");
+                string mot = Console.ReadLine();
+                if (mot.ToLower() == "exit")
+                    break;
 
-            // Changer de joueur
-            joueurIndex = (joueurIndex + 1) % joueurs.Count;
+                if (mot.Length < 2)
+                {
+                    Console.WriteLine("Le mot doit faire au moins 2 lettres.");
+                }
+                else if (joueurs[joueurI].Contient(mot))
+                {
+                    Console.WriteLine($"Vous avez déjà trouvé le mot \"{mot}\".");
+                }
+                else
+                {
+                    var resultat = p.Recherche_Mot(mot);
+                    if (resultat != null)
+                    {
+                        // Vérification dans le dictionnaire
+                        if (dico.RechDichoRecursif(mot))
+                        {
+                            Console.WriteLine($"Le mot \"{mot}\" est présent sur la grille et dans le dictionnaire !");
+                            // Ajoute à la base de donnée de mots trouvés
+                            joueurs[joueurI].Add_Mot(mot);
+                            //Ajoute 1 au score 
+                            joueurs[joueurI].Add_Score(1); 
+                            Console.WriteLine($"Bravo {joueurs[joueurI].Nom} !");
+                            Console.WriteLine("Score de "+ joueurs[joueurI].Nom+ " = " +joueurs[joueurI].Score);
+                        }
+                        else
+                        {
+                            Console.WriteLine($"Le mot \"{mot}\" n'est pas dans le dictionnaire français.");
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine($"Le mot \"{mot}\" n'est PAS présent sur la grille.");
+                    }
+                }
 
-            // Attendre pour que l'utilisateur puisse lire le résultat avant de passer au joueur suivant
-            Console.WriteLine("\nAppuyez sur une touche pour continuer...");
-            Console.ReadKey();
-        }
+                // Changer de joueur
+                joueurI = (joueurI + 1) % joueurs.Count;
+
+                // Attendre pour que l'utilisateur puisse lire le résultat avant de passer au joueur suivant
+                Console.WriteLine("\nAppuyez sur une touche pour continuer...");
+                Console.ReadKey();
+            }
 
             //Afficher les scores des deux joueurs 
             Console.Clear();

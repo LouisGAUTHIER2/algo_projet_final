@@ -228,6 +228,10 @@ namespace algo_projet_final
             return RechercheDirection(ligne + dLigne, col + dCol, mot, indexLettre + 1, dLigne, dCol, positions);
         }
 
+
+
+
+
         // Mise à jour du plateau après suppression d’un mot (lettres qui “glissent”)
         public void Maj_Plateau(object objet)
         {
