@@ -61,6 +61,8 @@ static void Main(string[] args)
         do
         {
             Console.Clear();
+            Console.WriteLine("==== CHOIX DE LA TAILLE DE LA GRILLE =====");
+            Console.WriteLine();
             Console.WriteLine("Plateau généré :");
             Console.WriteLine("");
             Console.WriteLine(p.ToString());
@@ -87,6 +89,8 @@ static void Main(string[] args)
             while (true)
             {
                 Console.Clear();
+                Console.WriteLine("==== JEU =====");
+                Console.WriteLine();
                 Console.WriteLine("Plateau actuel :");
                 Console.WriteLine();
                 Console.WriteLine(p.ToString());
@@ -154,7 +158,6 @@ static void Main(string[] args)
             Thread.Sleep(3000);
 
             Console.Clear();
-            Console.WriteLine();
             Console.WriteLine("==== RÉSULTAT ====");
             Console.WriteLine();
 

@@ -239,7 +239,7 @@ namespace algo_projet_final
                     return true;
             }
 
-            // Si aucun chemin ne marche, on annule cette case (backtrack)
+            // Si aucun chemin ne marche, on annule cette case 
             visite[ligne, col] = false;
             return false;
         }
