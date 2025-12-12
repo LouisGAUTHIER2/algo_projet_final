@@ -83,6 +83,7 @@ static void Main(string[] args)
 
         int joueurI = 0;
 
+
             while (true)
             {
                 Console.Clear();
@@ -107,12 +108,16 @@ static void Main(string[] args)
                 else
                 {
                     var resultat = p.Recherche_Mot(mot);
-                    if (resultat != null)
+                    var positionsMot = p.Recherche_Mot(mot);
+                   
+                        if (resultat != null)
                     {
                         // Vérification dans le dictionnaire
                         if (dico.RechDichoRecursif(mot))
                         {
                             Console.WriteLine($"Le mot \"{mot}\" est présent sur la grille et dans le dictionnaire !");
+                            //Faire glisser les mots
+                            p.Maj_Plateau(positionsMot);
                             // Ajoute à la base de donnée de mots trouvés
                             joueurs[joueurI].Add_Mot(mot);
                             //Ajoute 1 au score 
