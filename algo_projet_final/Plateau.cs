@@ -177,39 +177,55 @@ namespace algo_projet_final
                 if (sr != null) sr.Close();
             }
         }
-
-        // Recherche d’un mot sur le plateau (simple, à améliorer)
         public object Recherche_Mot(string mot)
         {
-            // Recherche horizontale de gauche à droite depuis la dernière ligne
+            mot = mot.ToUpper();
             int len = mot.Length;
-            for (int i = lignes - 1; i >= 0; i--)
+
+            for (int i = 0; i < lignes; i++)
             {
-                for (int j = 0; j <= colonnes - len; j++)
+                for (int j = 0; j < colonnes; j++)
                 {
-                    bool trouve = true;
-                    for (int k = 0; k < len; k++)
+                    if (matrice[i, j] == mot[0])
                     {
-                        if (matrice[i, j + k] != mot[k])
+                        // Pour chaque direction : haut, bas, gauche, droite
+                        int[,] directions = new int[,]
                         {
-                            trouve = false;
-                            break;
-                        }
-                    }
-                    if (trouve)
-                    {
-                        // On retourne les positions des lettres trouvées (tableau de tuples)
-                        int[,] positions = new int[len, 2];
-                        for (int k = 0; k < len; k++)
+                    {-1, 0}, // haut
+                    {1, 0},  // bas
+                    {0, -1}, // gauche
+                    {0, 1},  // droite
+                    {-1, -1},// diagonale haut-gauche
+                    {-1, 1}, // diagonale haut-droite
+                    {1, -1}, // diagonale bas-gauche
+                    {1, 1}   // diagonale bas-droite
+                        };
+                        for (int d = 0; d < directions.GetLength(0); d++)
                         {
-                            positions[k, 0] = i;
-                            positions[k, 1] = j + k;
+                            int[,] positions = new int[len, 2];
+                            if (RechercheDirection(i, j, mot, 0, directions[d, 0], directions[d, 1], positions))
+                                return positions;
                         }
-                        return positions;
                     }
                 }
             }
-            return null; // pas trouvé
+            return null;
+        }
+
+        // Recherche récursive, évite de repasser sur la même case (sauf si tu veux permettre)
+        private bool RechercheDirection(int ligne, int col, string mot, int indexLettre, int dLigne, int dCol, int[,] positions)
+        {
+            if (indexLettre == mot.Length)
+                return true;
+            if (ligne < 0 || ligne >= lignes || col < 0 || col >= colonnes)
+                return false;
+            if (matrice[ligne, col] != mot[indexLettre])
+                return false;
+
+            positions[indexLettre, 0] = ligne;
+            positions[indexLettre, 1] = col;
+            // On avance dans la direction choisie
+            return RechercheDirection(ligne + dLigne, col + dCol, mot, indexLettre + 1, dLigne, dCol, positions);
         }
 
         // Mise à jour du plateau après suppression d’un mot (lettres qui “glissent”)
