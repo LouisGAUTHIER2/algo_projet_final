@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace algo_projet_final
@@ -16,7 +17,8 @@ static void Main(string[] args)
     {
         TerminalClass terminal = new TerminalClass();
         Console.Clear();
-        Console.WriteLine("====CONFIGURATION=====");
+        Console.WriteLine("==== CONFIGURATION =====");
+        Console.WriteLine();
 
         Console.Write($"{terminal.SetTextColor(255, 255, 0)}{terminal.SetBold()}Bienvenue ! Veuillez entrer vos {terminal.SetUnderline()}noms\n{terminal.ResetEffect()}");
 
@@ -71,6 +73,9 @@ static void Main(string[] args)
         // On sort de la boucle 
         Console.WriteLine("\nLe jeu commence...\n");
 
+        // Petite pause avant de commencer le jeu (1s)
+            Thread.Sleep(1000);
+
         int joueurIndex = 0;
 
         while (true)
@@ -109,6 +114,13 @@ static void Main(string[] args)
             Console.WriteLine("\nAppuyez sur une touche pour continuer...");
             Console.ReadKey();
         }
+
+            //Afficher les scores des deux joueurs 
+            Console.Clear();
+            Console.WriteLine("==== SCORE ====");
+            Console.WriteLine();
+            joueur1.AfficherInfos();
+            joueur2.AfficherInfos();
 
         // Attend une touche pour fermer la fenêtre console
         Console.WriteLine("Appuyez sur une touche pour quitter...");
