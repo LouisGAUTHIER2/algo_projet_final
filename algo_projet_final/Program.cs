@@ -43,7 +43,7 @@ static void Main(string[] args)
         joueurs.Add(joueur2);
 
         // Remplace le chemin par l'endroit où tu as mis Lettres.txt
-        string cheminLettres = @"C:\Users\pefer\OneDrive\Documents\EsiLv\Algo projet\algo_projet_final\Lettre.txt";
+        string cheminLettres = "Lettre.txt";
         int nbLignes = 8;
         int nbColonnes = 8;
 
@@ -58,7 +58,7 @@ static void Main(string[] args)
             Console.WriteLine("");
             Console.WriteLine(p.ToString());
 
-            Console.WriteLine("\nAppuyez sur 1 pour régénérer la grille, ou sur une autre touche pour continuer le jeu :");
+            Console.WriteLine("\nAppuyez sur 1 pour régénérer la grille, ou sur Entrer pour continuer le jeu :");
             choix = Console.ReadLine();
 
             if (choix == "1")
