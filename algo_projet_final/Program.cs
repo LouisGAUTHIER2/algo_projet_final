@@ -29,7 +29,7 @@ namespace algo_projet_final
             {
                 Console.Write("Entrez le nom du premier joueur (ou 'exit' pour quitter) : ");
                 nom1 = Console.ReadLine();
-                if (nom1.ToLower() == "exit" || nom1.ToLower() == "quit") return;
+                if (nom1.ToLower() == "exit" || nom1.ToLower() == "quitt") return;
             } while (string.IsNullOrWhiteSpace(nom1));
             Joueur joueur1 = new Joueur(nom1);
             joueurs.Add(joueur1);
