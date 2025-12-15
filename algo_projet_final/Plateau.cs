@@ -27,6 +27,9 @@ namespace algo_projet_final
             GenererAleatoirement();
         }
 
+        public int NbLignes { get { return lignes; } }
+        public int NbColonnes { get { return colonnes; } }
+
         // Initialise le plateau à partir d’un csv
         public Plateau(string fichierCSV)
         {
@@ -143,25 +146,25 @@ namespace algo_projet_final
                 sr = new StreamReader(nomfile);
                 string ligne;
                 // On compte le nombre de lignes et de colonnes
-                int tempLignes = 0;
-                int tempColonnes = 0;
-                string[] lignesTemp = new string[100]; // suppose max 100 lignes
+                int newligne = 0;
+                int newcolonne = 0;
+                string[] lignesv2 = new string[100]; // suppose max 100 lignes
 
                 while ((ligne = sr.ReadLine()) != null)
                 {
-                    lignesTemp[tempLignes] = ligne;
-                    tempLignes++;
+                    lignesv2[newligne] = ligne;
+                    newligne++;
                 }
-                if (tempLignes > 0)
-                    tempColonnes = lignesTemp[0].Split(',').Length;
+                if (newligne > 0)
+                    newcolonne = lignesv2[0].Split(';').Length;
 
-                lignes = tempLignes;
-                colonnes = tempColonnes;
+                lignes = newligne;
+                colonnes = newcolonne;
                 matrice = new char[lignes, colonnes];
 
                 for (int i = 0; i < lignes; i++)
                 {
-                    string[] casesLigne = lignesTemp[i].Split(',');
+                    string[] casesLigne = lignesv2[i].Split(';');
                     for (int j = 0; j < colonnes; j++)
                     {
                         matrice[i, j] = casesLigne[j][0];
@@ -177,6 +180,8 @@ namespace algo_projet_final
                 if (sr != null) sr.Close();
             }
         }
+
+
         public object Recherche_Mot(string mot)
         {
             mot = mot.ToUpper();
