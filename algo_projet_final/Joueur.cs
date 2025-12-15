@@ -75,6 +75,9 @@ namespace algo_projet_final
             this.Score += Score;
         }
 
+        
+            
+
 
 
         //Affiche les différentes information et sur les joueurs

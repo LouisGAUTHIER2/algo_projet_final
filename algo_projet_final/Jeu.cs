@@ -26,8 +26,11 @@ namespace algo_projet_final
 
         }
 
-      
 
+        public void ChangePlayer()
+        {
+            if (joueurActuel == joueur1) joueurActuel = joueur2; else joueurActuel = joueur1;
+        }
 
         public bool motScored(string mot)
         {
