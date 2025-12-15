@@ -21,27 +21,11 @@ namespace algo_projet_final
             Console.WriteLine("==== CONFIGURATION =====");
             Console.WriteLine();
 
-            Console.Write($"{terminal.SetTextColor(255, 255, 0)}{terminal.SetBold()}Bienvenue ! Veuillez entrer vos {terminal.SetUnderline()}noms\n{terminal.ResetEffect()}");
-
             List<Joueur> joueurs = new List<Joueur>();
 
             // Entrée des noms des joueurs (avec possibilité de quitter)
             Joueur joueur1 = new Joueur();
             Joueur joueur2 = new Joueur();
-
-        string nom2;
-        do
-        {
-            Console.Write("Entrez le nom du second joueur : ");
-            nom2 = Console.ReadLine();
-            if (nom2.ToLower() == nom1.ToLower())
-            {
-                Console.WriteLine("Ce nom est déjà pris, choisissez-en un autre.");
-            }
-        } while (nom2.ToLower() == nom1.ToLower());
-
-        Joueur joueur2 = new Joueur(nom2);
-        joueurs.Add(joueur2);
 
             Dictionnaire dico = new Dictionnaire("Mots_Français.txt", "francais");
 
@@ -150,29 +134,44 @@ namespace algo_projet_final
 
                 do
                 {
+                    if (mot != "")
+                    {
+                        TerminalClass.ClearLine();
+                        Console.Write("Mot invalide");
+                        Thread.Sleep(1000);
+                        TerminalClass.ClearLine();
+                    }
+                    
                     mot = "";
                     ConsoleKeyInfo keyPressed;
 
                     // on continue la boucle tant que le joueur n'a pas appuyé sur entrée ou échape
                     do
                     {
-                        while (!Console.KeyAvailable)
+                        while (!Console.KeyAvailable && timeLimit - (DateTimeOffset.Now.ToUnixTimeSeconds() - startingTime) >= 0)
                         {
                             TerminalClass.ClearLine();
-                            Console.Write($"Temps restant {DateTimeOffset.Now.ToUnixTimeSeconds() - startingTime} s : " + mot);
+                            Console.Write($"Temps restant {timeLimit - (DateTimeOffset.Now.ToUnixTimeSeconds() - startingTime)} s : " + mot);
                             Thread.Sleep(100);
                         }
+                        if (timeLimit - (DateTimeOffset.Now.ToUnixTimeSeconds() - startingTime) < 0) break;
+                        
                         keyPressed = Console.ReadKey(true);
+
+                        if (keyPressed.Key != ConsoleKey.Enter) mot += keyPressed.KeyChar;
                     } while (keyPressed.Key != ConsoleKey.Enter);
+                    if (timeLimit - (DateTimeOffset.Now.ToUnixTimeSeconds() - startingTime) < 0) break;
+
                 } while (!jeu.motScored(mot));
+                jeu.ChangePlayer();
             }
 
 
             // Affichage des scores finaux
-            Console.Clear();
+            TerminalClass.ClearTerminal();
             Console.WriteLine("==== SCORE FINAL ====\n");
-            foreach (var j in joueurs)
-                j.AfficherInfos();
+            joueur1.AfficherInfos();
+            joueur2.AfficherInfos();
 
             Console.WriteLine("\n==== RÉSULTAT ====\n");
             if (joueur1.Score > joueur2.Score)
