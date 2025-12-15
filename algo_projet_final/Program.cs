@@ -11,143 +11,85 @@ namespace algo_projet_final
 {
     internal class Program
     {
-        static Jeu jeu;
-        static long statingTime;
-        static long timeLimit = 60;
-
-
-static void Main(string[] args)
-    {
-        TerminalClass terminal = new TerminalClass();
-        Console.Clear();
-        Console.WriteLine("==== CONFIGURATION =====");
-        Console.WriteLine();
-
-            Console.Write($"{terminal.SetTextColor(255, 255, 0)}{terminal.SetBold()}Bienvenue ! Veuillez entrer vos {terminal.SetUnderline()}noms\n{terminal.ResetEffect()}");
-
-            List<Joueur> joueurs = new List<Joueur>();
+    static Jeu jeu;
+    static long startingTime;
+    static long timeLimit = 60;
+    
+        static void Main(string[] args)
+        {
+            Console.Clear();
+            Console.WriteLine("==== CONFIGURATION =====");
+            Console.WriteLine();
 
             // Entrée des noms des joueurs (avec possibilité de quitter)
-            string nom1;
-            do
-            {
-                Console.Write("Entrez le nom du premier joueur (ou 'exit' pour quitter) : ");
-                nom1 = Console.ReadLine();
-                if (nom1.ToLower() == "exit" || nom1.ToLower() == "quitt") return;
-            } while (string.IsNullOrWhiteSpace(nom1));
-            Joueur joueur1 = new Joueur(nom1);
-            joueurs.Add(joueur1);
-
-        string nom2;
-        do
-        {
-            Console.Write("Entrez le nom du second joueur : ");
-            nom2 = Console.ReadLine();
-            if (nom2.ToLower() == nom1.ToLower())
-            {
-                Console.WriteLine("Ce nom est déjà pris, choisissez-en un autre.");
-            }
-        } while (nom2.ToLower() == nom1.ToLower());
-
-        Joueur joueur2 = new Joueur(nom2);
-        joueurs.Add(joueur2);
+            Joueur joueur1 = new Joueur();
+            Joueur joueur2 = new Joueur();
 
             Dictionnaire dico = new Dictionnaire("Mots_Français.txt", "francais");
 
-            // Remplace le chemin par l'endroit où tu as mis Lettres.txt
-         string cheminLettres = "Lettre.txt";
-         int nbLignes ;
-         int nbColonnes ;
-         Console.WriteLine("Entrer la taille de votre grille ");
-         nbLignes = Convert.ToInt32(Console.ReadLine());
-         nbColonnes = nbLignes;
+            Console.WriteLine("Entrer la taille de votre grille ");
+            int nbLignes = Convert.ToInt32(Console.ReadLine());
 
-        // Création d'un plateau aléatoire
-        Plateau p = new Plateau(cheminLettres, nbLignes, nbColonnes);
-        string choix;
+            // Création d'un plateau aléatoire
+            Plateau p = new Plateau("Lettre.txt", nbLignes, nbLignes);
+            string choix;
 
-        do
-        {
-            Console.Clear();
-            Console.WriteLine("==== CHOIX DE LA TAILLE DE LA GRILLE =====");
-            Console.WriteLine();
-            Console.WriteLine("Plateau généré :");
-            Console.WriteLine("");
-            Console.WriteLine(p.ToString());
-
-            Console.WriteLine("\nAppuyez sur 1 pour régénérer la grille, ou sur Entrer pour continuer le jeu :");
-            choix = Console.ReadLine();
-
-            if (choix == "1")
-            {
-                p = new Plateau(cheminLettres, nbLignes, nbColonnes);
-            }
-
-        } while (choix == "1");
-
-        // On sort de la boucle 
-        Console.WriteLine("\nLe jeu commence...\n");
-
-        // Petite pause avant de commencer le jeu (1s)
-            Thread.Sleep(1000);
-
-        int joueurI = 0;
-
-
-            while (true)
+            do
             {
                 Console.Clear();
-                Console.WriteLine("==== JEU =====");
+                Console.WriteLine("==== CHOIX DE LA TAILLE DE LA GRILLE =====");
                 Console.WriteLine();
-                Console.WriteLine("Plateau actuel :");
-                Console.WriteLine();
+                Console.WriteLine("Plateau généré :");
+                Console.WriteLine("");
                 Console.WriteLine(p.ToString());
-                Console.WriteLine($"\nC'est au tour de {joueurs[joueurI].Nom}.");
 
-                Console.Write("Entrez un mot à chercher (ou tapez 'exit' pour quitter) : ");
-                string mot = Console.ReadLine();
-                if (mot.ToLower() == "exit" || mot.ToLower() == "quit")
-                    break;
+                Console.WriteLine("\nAppuyez sur 1 pour régénérer la grille, ou sur Entrer pour continuer le jeu :");
+                choix = Console.ReadLine();
 
-                if (mot.Length < 2)
+                if (choix == "1")
                 {
-                    Console.WriteLine("Le mot doit faire au moins 2 lettres.");
+                    p = new Plateau("Lettre.txt", nbLignes, nbLignes);
                 }
-                else if (joueurs[joueurI].Contient(mot))
+
+            } while (choix == "1");
+
+            // On sort de la boucle 
+            Console.WriteLine("\nLe jeu commence...\n");
+
+            Jeu jeu = new Jeu(joueur1, joueur2, dico, p);
+            // Petite pause avant de commencer le jeu (1s)
+            Thread.Sleep(1000);
+            startingTime = DateTimeOffset.Now.ToUnixTimeSeconds();
+
+            while (DateTimeOffset.Now.ToUnixTimeSeconds() - startingTime <= timeLimit)
+            {
+                //partie d'un joueur
+                Console.Clear();
+                Console.WriteLine("==== JEU DE MOTS =====");
+                Console.WriteLine(p.ToString());
+
+                Console.WriteLine($"C'est au tour de {jeu.JoueurActuel.Nom} de jouer ! Entre un mot valide ou appui sur échape pour passer ton tour.");
+
+                // on réitère jusqu'à ce que le joueur entre un mot valide ou décide de passer son tour
+                string mot = "";
+
+                do
                 {
-                    Console.WriteLine($"Vous avez déjà trouvé le mot \"{mot}\".");
-                }
-                else
-                {
-                    var resultat = p.Recherche_Mot(mot);
-                    var positionsMot = resultat; // ou adapte selon ton code
-                    if (resultat != null)
+                    mot = "";
+                    ConsoleKeyInfo keyPressed;
+
+                    // on continue la boucle tant que le joueur n'a pas appuyé sur entrée ou échape
+                    do
                     {
-                        // Vérification dans le dictionnaire
-                        if (dico.RechDichoRecursif(mot))
+                        while (!Console.KeyAvailable)
                         {
-                            Console.WriteLine($"Le mot \"{mot}\" est présent sur la grille et dans le dictionnaire !");
-                            p.Maj_Plateau(positionsMot);
-                            joueurs[joueurI].Add_Mot(mot);
-                            joueurs[joueurI].Add_Score(1); // ou ta règle de score
-                            Console.WriteLine($"Bravo {joueurs[joueurI].Nom} !");
-                            Console.WriteLine("Score de "+ joueurs[joueurI].Nom+ " = " +joueurs[joueurI].Score);
+                            TerminalClass.ClearLine();
+                            Console.Write($"Temps restant {DateTimeOffset.Now.ToUnixTimeSeconds() - startingTime} s : " + mot);
+                            Thread.Sleep(100);
                         }
-                        else
-                        {
-                            Console.WriteLine($"Le mot \"{mot}\" n'est pas dans le dictionnaire français.");
-                        }
-                    }
-                    else
-                    {
-                        Console.WriteLine($"Le mot \"{mot}\" n'est PAS présent sur la grille.");
-                    }
-                }
-
-                // Changer de joueur
-                joueurI = (joueurI + 1) % joueurs.Count;
-                Console.WriteLine("\nAppuyez sur une touche pour continuer...");
-                Console.ReadKey();
+                        keyPressed = Console.ReadKey(true);
+                    } while (keyPressed.Key != ConsoleKey.Enter);
+                } while (!jeu.motScored(mot));
             }
 
             // Affichage des scores finaux
@@ -175,7 +117,7 @@ static void Main(string[] args)
             // Attend une touche pour fermer la fenêtre console
             Console.WriteLine("Appuyez sur une touche pour quitter...");
 
-        Console.ReadKey();
+            Console.ReadKey();
+        }
     }
-}
 }
