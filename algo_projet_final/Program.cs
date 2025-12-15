@@ -11,41 +11,21 @@ namespace algo_projet_final
 {
     internal class Program
     {
-
-
+    static Jeu jeu;
+    static long startingTime;
+    static long timeLimit = 60;
+    
         static void Main(string[] args)
         {
-            
             Console.Clear();
-            Console.WriteLine("==== CONFIGURATION =====\n");
-
+            Console.WriteLine("==== CONFIGURATION =====");
+            Console.WriteLine();
 
             List<Joueur> joueurs = new List<Joueur>();
 
             // Entrée des noms des joueurs (avec possibilité de quitter)
-            string nom1;
-            do
-            {
-                Console.Write("Entrez le nom du premier joueur (ou 'exit' pour quitter) : ");
-                nom1 = Console.ReadLine();
-                if (nom1.ToLower() == "exit" || nom1.ToLower() == "quitt") return;
-            } while (string.IsNullOrWhiteSpace(nom1));
-            Joueur joueur1 = new Joueur(nom1);
-            joueurs.Add(joueur1);
-
-            string nom2;
-            do
-            {
-                Console.Write("Entrez le nom du second joueur (ou 'exit' pour quitter) : ");
-                nom2 = Console.ReadLine();
-                if (nom2.ToLower() == "exit" || nom2.ToLower() == "quit") return;
-                if (nom2.ToLower() == nom1.ToLower())
-                {
-                    Console.WriteLine("Ce nom est déjà pris, choisissez-en un autre.");
-                }
-            } while (string.IsNullOrWhiteSpace(nom2) || nom2.ToLower() == nom1.ToLower());
-            Joueur joueur2 = new Joueur(nom2);
-            joueurs.Add(joueur2);
+            Joueur joueur1 = new Joueur();
+            Joueur joueur2 = new Joueur();
 
             Dictionnaire dico = new Dictionnaire("Mots_Français.txt", "francais");
 
@@ -132,48 +112,38 @@ namespace algo_projet_final
                 } while (choix == "1");
             }
 
+            // On sort de la boucle 
             Console.WriteLine("\nLe jeu commence...\n");
+
+            Jeu jeu = new Jeu(joueur1, joueur2, dico, p);
+            // Petite pause avant de commencer le jeu (1s)
             Thread.Sleep(1000);
+            startingTime = DateTimeOffset.Now.ToUnixTimeSeconds();
 
-            int joueurI = 0;
-            while (true)
+            while (DateTimeOffset.Now.ToUnixTimeSeconds() - startingTime <= timeLimit)
             {
+                //partie d'un joueur
                 Console.Clear();
-                Console.WriteLine("==== JEU =====\n");
-                Console.WriteLine("Plateau actuel :\n");
+                Console.WriteLine("==== JEU DE MOTS =====");
                 Console.WriteLine(p.ToString());
-                Console.WriteLine($"\nC'est au tour de {joueurs[joueurI].Nom}.");
 
-                Console.Write("Entrez un mot à chercher (ou tapez 'exit' pour quitter) : ");
-                string mot = Console.ReadLine();
+                Console.WriteLine($"C'est au tour de {jeu.JoueurActuel.Nom} de jouer ! Entre un mot valide ou appui sur échape pour passer ton tour.");
 
-                if (mot.ToLower() == "exit" || mot.ToLower() == "quit")
-                    break;
+                // on réitère jusqu'à ce que le joueur entre un mot valide ou décide de passer son tour
+                string mot = "";
 
-                if (mot.Length < 2)
+                do
                 {
-                    Console.WriteLine("Le mot doit faire au moins 2 lettres.");
-                }
-                else if (joueurs[joueurI].Contient(mot))
-                {
-                    Console.WriteLine($"Vous avez déjà trouvé le mot \"{mot}\".");
-                }
-                else
-                {
-                    //  Recherche du mot dans la grille
-                    int[,] positionsMot = p.Recherche_Mot(mot);
-
-                    if (positionsMot != null)
+                    if (mot != "")
                     {
-                        if (dico.RechDichoRecursif(mot))
-                        {
-                            Console.WriteLine($"Le mot \"{mot}\" est présent sur la grille et dans le dictionnaire !");
-
-                            //  Mise à jour du plateau
-                            p.Maj_Plateau(positionsMot);
-
-                            joueurs[joueurI].Add_Mot(mot);
-                            joueurs[joueurI].Add_Score(mot);
+                        TerminalClass.ClearLine();
+                        Console.Write("Mot invalide");
+                        Thread.Sleep(1000);
+                        TerminalClass.ClearLine();
+                    }
+                    
+                    mot = "";
+                    ConsoleKeyInfo keyPressed;
 
                             Console.WriteLine($"Bravo {joueurs[joueurI].Nom} !");
                             Console.WriteLine("Score de " + joueurs[joueurI].Nom + " = " + joueurs[joueurI].Score);
@@ -188,8 +158,10 @@ namespace algo_projet_final
                         Console.WriteLine($"Le mot \"{mot}\" n'est PAS présent sur la grille.");
                     }
                 }
-               
-                joueurI = (joueurI + 1) % joueurs.Count;
+
+                
+                Jeu jeu = new Jeu(joueur1, joueur1, dico, p);
+                jeu.ChangePlayer();
 
 
                 Console.WriteLine("\nAppuyez sur une touche pour continuer...");
@@ -198,10 +170,10 @@ namespace algo_projet_final
 
 
             // Affichage des scores finaux
-            Console.Clear();
+            TerminalClass.ClearTerminal();
             Console.WriteLine("==== SCORE FINAL ====\n");
-            foreach (var j in joueurs)
-                j.AfficherInfos();
+            joueur1.AfficherInfos();
+            joueur2.AfficherInfos();
 
             Console.WriteLine("\n==== RÉSULTAT ====\n");
             if (joueur1.Score > joueur2.Score)
@@ -211,7 +183,6 @@ namespace algo_projet_final
             else
                 Console.WriteLine("Match nul ! Les deux joueurs sont à égalité.");
 
-            Console.WriteLine("\nAppuyez sur une touche pour quitter...");
             Console.ReadKey();
         }
     }
