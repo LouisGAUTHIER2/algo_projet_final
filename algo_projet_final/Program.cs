@@ -147,6 +147,7 @@ namespace algo_projet_final
 
                 Console.Write("Entrez un mot à chercher (ou tapez 'exit' pour quitter) : ");
                 string mot = Console.ReadLine();
+
                 if (mot.ToLower() == "exit" || mot.ToLower() == "quit")
                     break;
 
@@ -160,16 +161,21 @@ namespace algo_projet_final
                 }
                 else
                 {
-                    var resultat = p.Recherche_Mot(mot);
-                    var positionsMot = resultat; // ou adapte selon ton code
-                    if (resultat != null)
+                    //  Recherche du mot dans la grille
+                    int[,] positionsMot = p.Recherche_Mot(mot);
+
+                    if (positionsMot != null)
                     {
                         if (dico.RechDichoRecursif(mot))
                         {
                             Console.WriteLine($"Le mot \"{mot}\" est présent sur la grille et dans le dictionnaire !");
+
+                            //  Mise à jour du plateau
                             p.Maj_Plateau(positionsMot);
+
                             joueurs[joueurI].Add_Mot(mot);
-                            joueurs[joueurI].Add_Score(1); // ou ta règle de score
+                            joueurs[joueurI].Add_Score(1);
+
                             Console.WriteLine($"Bravo {joueurs[joueurI].Nom} !");
                             Console.WriteLine("Score de " + joueurs[joueurI].Nom + " = " + joueurs[joueurI].Score);
                         }
@@ -185,9 +191,11 @@ namespace algo_projet_final
                 }
 
                 joueurI = (joueurI + 1) % joueurs.Count;
+
                 Console.WriteLine("\nAppuyez sur une touche pour continuer...");
                 Console.ReadKey();
             }
+
 
             // Affichage des scores finaux
             Console.Clear();

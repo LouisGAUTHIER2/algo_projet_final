@@ -182,97 +182,84 @@ namespace algo_projet_final
         }
 
 
-        public object Recherche_Mot(string mot)
+        // Recherche un mot sur le plateau 
+        public int[,] Recherche_Mot(string mot)
         {
             mot = mot.ToUpper();
-            int len = mot.Length;
+            int[,] positions = new int[mot.Length, 2];
+            bool[,] présentoupas = new bool[lignes, colonnes];
 
-            // Parcourt tout le plateau
             for (int i = 0; i < lignes; i++)
             {
                 for (int j = 0; j < colonnes; j++)
                 {
                     if (matrice[i, j] == mot[0])
                     {
-                        int[,] positions = new int[len, 2];
-                        bool[,] visite = new bool[lignes, colonnes];
-
-                        // On tente de suivre le mot depuis cette case
-                        if (ChercherDepuis(i, j, mot, 0, positions, visite))
+                        if (RechercheRec(i, j, mot, 0, positions, présentoupas))
                             return positions;
                     }
                 }
             }
 
-            return null; // pas trouvé
+            return null;
         }
 
-
-        private bool ChercherDepuis(int ligne, int col, string mot, int index, int[,] positions, bool[,] visite)
+        private bool RechercheRec(int i, int j, string mot, int index,
+                          int[,] pos, bool[,] présentoupas)
         {
+            // mot déjà trouvé
             if (index == mot.Length)
                 return true;
 
-            // Conditions de base
-            if (ligne < 0 || ligne >= lignes || col < 0 || col >= colonnes)
-                return false;
-            if (visite[ligne, col])
-                return false;
-            if (matrice[ligne, col] != mot[index])
+            // hors limites
+            if (i < 0 || i >= lignes || j < 0 || j >= colonnes)
                 return false;
 
-            // On enregistre la position
-            visite[ligne, col] = true;
-            positions[index, 0] = ligne;
-            positions[index, 1] = col;
+      
+            // lettre incorrecte
+            if (matrice[i, j] != mot[index])
+                return false;
 
-            // Déplacements possibles : haut, bas, gauche, droite
-            int[,] dirs = {
-        {-1, 0},
-        { 1, 0},
-        { 0,-1},
-        { 0, 1}
-    };
+            // marquer la case qu'on vient de faire
+            présentoupas[i, j] = true;
+            pos[index, 0] = i;
+            pos[index, 1] = j; 
 
-            // Essayer chaque direction
-            for (int k = 0; k < 4; k++)
+            // déplacementq sur la grille
+            if (RechercheRec(i - 1, j, mot, index + 1, pos, présentoupas) ||
+                RechercheRec(i + 1, j, mot, index + 1, pos, présentoupas) ||
+                RechercheRec(i, j - 1, mot, index + 1, pos, présentoupas) ||
+                RechercheRec(i, j + 1, mot, index + 1, pos, présentoupas))
             {
-                int nl = ligne + dirs[k, 0];
-                int nc = col + dirs[k, 1];
-
-                if (ChercherDepuis(nl, nc, mot, index + 1, positions, visite))
-                    return true;
+                return true;
             }
 
-            // Si aucun chemin ne marche, on annule cette case 
-            visite[ligne, col] = false;
+            // retour arrière
+            présentoupas[i, j] = false;
             return false;
         }
 
 
 
-
-
-
-        // Mise à jour du plateau après suppression d’un mot (lettres qui “glissent”)
-        public void Maj_Plateau(object objet)
+        // Met à jour le plateau après suppression d’un mot
+        public void Maj_Plateau(int[,] positions)
         {
-            if (objet == null) return;
-            int[,] positions = (int[,])objet;
+            if (positions == null) return;
+
             int len = positions.GetLength(0);
 
-            // On traite chaque colonne concernée
             for (int k = 0; k < len; k++)
             {
-                int col = positions[k, 1];
                 int ligneSuppr = positions[k, 0];
-                // On fait descendre toutes les lettres au-dessus de la lettre supprimée
+                int col = positions[k, 1];
+
+                // Faire descendre toutes les lettres au-dessus
                 for (int i = ligneSuppr; i > 0; i--)
-                {
                     matrice[i, col] = matrice[i - 1, col];
-                }
+
                 matrice[0, col] = '-'; // case vide en haut
             }
         }
+
     }
 }
