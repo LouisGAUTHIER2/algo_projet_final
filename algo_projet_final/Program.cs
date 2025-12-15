@@ -27,11 +27,16 @@ static void Main(string[] args)
 
             List<Joueur> joueurs = new List<Joueur>();
 
-        // Entrée des noms des joueurs
-        Console.Write("Entrez le nom du premier joueur : ");
-        string nom1 = Console.ReadLine();
-        Joueur joueur1 = new Joueur(nom1);
-        joueurs.Add(joueur1);
+            // Entrée des noms des joueurs (avec possibilité de quitter)
+            string nom1;
+            do
+            {
+                Console.Write("Entrez le nom du premier joueur (ou 'exit' pour quitter) : ");
+                nom1 = Console.ReadLine();
+                if (nom1.ToLower() == "exit" || nom1.ToLower() == "quitt") return;
+            } while (string.IsNullOrWhiteSpace(nom1));
+            Joueur joueur1 = new Joueur(nom1);
+            joueurs.Add(joueur1);
 
         string nom2;
         do
@@ -101,7 +106,7 @@ static void Main(string[] args)
 
                 Console.Write("Entrez un mot à chercher (ou tapez 'exit' pour quitter) : ");
                 string mot = Console.ReadLine();
-                if (mot.ToLower() == "exit")
+                if (mot.ToLower() == "exit" || mot.ToLower() == "quit")
                     break;
 
                 if (mot.Length < 2)
@@ -115,20 +120,16 @@ static void Main(string[] args)
                 else
                 {
                     var resultat = p.Recherche_Mot(mot);
-                    var positionsMot = p.Recherche_Mot(mot);
-                   
-                        if (resultat != null)
+                    var positionsMot = resultat; // ou adapte selon ton code
+                    if (resultat != null)
                     {
                         // Vérification dans le dictionnaire
                         if (dico.RechDichoRecursif(mot))
                         {
                             Console.WriteLine($"Le mot \"{mot}\" est présent sur la grille et dans le dictionnaire !");
-                            //Faire glisser les mots
                             p.Maj_Plateau(positionsMot);
-                            // Ajoute à la base de donnée de mots trouvés
                             joueurs[joueurI].Add_Mot(mot);
-                            //Ajoute 1 au score 
-                            joueurs[joueurI].Add_Score(1); 
+                            joueurs[joueurI].Add_Score(1); // ou ta règle de score
                             Console.WriteLine($"Bravo {joueurs[joueurI].Nom} !");
                             Console.WriteLine("Score de "+ joueurs[joueurI].Nom+ " = " +joueurs[joueurI].Score);
                         }
@@ -145,21 +146,11 @@ static void Main(string[] args)
 
                 // Changer de joueur
                 joueurI = (joueurI + 1) % joueurs.Count;
-
-                // Attendre pour que l'utilisateur puisse lire le résultat avant de passer au joueur suivant
                 Console.WriteLine("\nAppuyez sur une touche pour continuer...");
                 Console.ReadKey();
             }
 
-            //Afficher les scores des deux joueurs 
-            Console.Clear();
-            Console.WriteLine("==== SCORE ====");
-            Console.WriteLine();
-            joueur1.AfficherInfos();
-            joueur2.AfficherInfos();
-
-            Thread.Sleep(3000);
-
+            // Affichage des scores finaux
             Console.Clear();
             Console.WriteLine("==== RÉSULTAT ====");
             Console.WriteLine();
