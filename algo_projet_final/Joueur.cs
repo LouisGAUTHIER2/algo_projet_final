@@ -18,6 +18,23 @@ namespace algo_projet_final
             Score = 0;
             MotsTrouves = new List<string>();
         }
+        public Joueur()
+        {
+            string nom = "";
+            Console.WriteLine("Entrez un nom de joueur valide :");
+            do
+            {
+                TerminalClass.ClearLine();
+                nom = Console.ReadLine();
+                Console.SetCursorPosition(0, Console.CursorTop - 1);
+            } while (nom == "");
+
+            Console.WriteLine();
+
+            this.Nom = nom;
+            Score = 0;
+            MotsTrouves = new List<string>();
+        }
         //Ajoute un mot à la liste de mots trouvés
         public void Add_Mot(string mot)
         {

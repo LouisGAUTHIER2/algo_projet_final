@@ -14,7 +14,7 @@ namespace algo_projet_final
         private Plateau plateau;
         private Joueur joueurActuel;
 
-        public Jeu(Joueur joueur1, Joueur joueur2, Dictionnaire dico, Plateau plateau, string score_file_path)
+        public Jeu(Joueur joueur1, Joueur joueur2, Dictionnaire dico, Plateau plateau)
         {
             // On initialise les attributs de base
             this.joueur1 = joueur1;
@@ -26,11 +26,38 @@ namespace algo_projet_final
 
         }
 
-        /*public void ChangePlayer()
+        public void ChangePlayer()
         {
             if (this.joueurActuel.Nom == joueur1.Nom) this.joueurActuel = joueur2;
             else this.joueurActuel = joueur1;
-        }*/
+        }
 
+        public bool motScored(string mot)
+        {
+            var pos_mot = plateau.Recherche_Mot(mot);
+
+            if (mot == null || !dico.RechDichoRecursif(mot) || joueurActuel.Contient(mot) || pos_mot == null) return false;
+
+            plateau.Maj_Plateau(pos_mot);
+            joueurActuel.Add_Mot(mot);
+            joueurActuel.Add_Score(mot.Length);
+
+            return true;
+        } 
+
+        public Joueur JoueurActuel
+        {
+            get { return joueurActuel; }
+        }
+
+        public Joueur Joueur1
+        {
+            get { return joueur1; }
+        }
+
+        public Joueur Joueur2
+        {
+            get { return joueur2; }
+        }
     }
 }
