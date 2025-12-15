@@ -26,11 +26,8 @@ namespace algo_projet_final
 
         }
 
-        public void ChangePlayer()
-        {
-            if (this.joueurActuel.Nom == joueur1.Nom) this.joueurActuel = joueur2;
-            else this.joueurActuel = joueur1;
-        }
+      
+
 
         public bool motScored(string mot)
         {
@@ -40,7 +37,7 @@ namespace algo_projet_final
 
             plateau.Maj_Plateau(pos_mot);
             joueurActuel.Add_Mot(mot);
-            joueurActuel.Add_Score(mot.Length);
+            joueurActuel.Add_Score(mot);
 
             return true;
         } 

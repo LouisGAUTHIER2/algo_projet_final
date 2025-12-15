@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection.Emit;
+using System.Runtime.Versioning;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -49,11 +52,30 @@ namespace algo_projet_final
             return MotsTrouves.Contains(mot.ToLower());
         }
 
-        //Ajoute un point si le mot est nouveau dans la liste
-        public void Add_Score(int points)
+        //Ajoute différents points pour chaque mot
+        public void Add_Score(string mot)
         {
-            Score += points;
+            int Score = 0;
+            string[] lignes = File.ReadAllLines("Lettre.txt");
+
+            foreach (char c in mot.ToUpper())
+            {
+                foreach (string l in lignes)
+                {
+                    string[] parts = l.Split(',');
+
+                    if (parts[0][0] == c)
+                    {
+                        Score += Convert.ToInt32(parts[2]);
+                        break;
+                    }
+                }
+            }
+
+            this.Score += Score;
         }
+
+
 
         //Affiche les différentes information et sur les joueurs
         public void AfficherInfos()

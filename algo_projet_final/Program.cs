@@ -173,7 +173,7 @@ namespace algo_projet_final
                             p.Maj_Plateau(positionsMot);
 
                             joueurs[joueurI].Add_Mot(mot);
-                            joueurs[joueurI].Add_Score(1);
+                            joueurs[joueurI].Add_Score(mot);
 
                             Console.WriteLine($"Bravo {joueurs[joueurI].Nom} !");
                             Console.WriteLine("Score de " + joueurs[joueurI].Nom + " = " + joueurs[joueurI].Score);
@@ -188,10 +188,8 @@ namespace algo_projet_final
                         Console.WriteLine($"Le mot \"{mot}\" n'est PAS présent sur la grille.");
                     }
                 }
-
-                
-                Jeu jeu = new Jeu(joueur1, joueur1, dico, p);
-                jeu.ChangePlayer();
+               
+                joueurI = (joueurI + 1) % joueurs.Count;
 
 
                 Console.WriteLine("\nAppuyez sur une touche pour continuer...");
