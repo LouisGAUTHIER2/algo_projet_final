@@ -11,10 +11,10 @@ namespace algo_projet_final
 {
     internal class Program
     {
-    static Jeu jeu;
-    static long startingTime;
-    static long timeLimit = 60;
-    
+        static Jeu jeu;
+        static long startingTime;
+        static long timeLimit = 60;
+
         static void Main(string[] args)
         {
             Console.Clear();
@@ -141,31 +141,29 @@ namespace algo_projet_final
                         Thread.Sleep(1000);
                         TerminalClass.ClearLine();
                     }
-                    
+
                     mot = "";
                     ConsoleKeyInfo keyPressed;
 
-                            Console.WriteLine($"Bravo {joueurs[joueurI].Nom} !");
-                            Console.WriteLine("Score de " + joueurs[joueurI].Nom + " = " + joueurs[joueurI].Score);
-                        }
-                        else
-                        {
-                            Console.WriteLine($"Le mot \"{mot}\" n'est pas dans le dictionnaire français.");
-                        }
-                    }
-                    else
+                    // on continue la boucle tant que le joueur n'a pas appuyé sur entrée ou échape
+                    do
                     {
-                        Console.WriteLine($"Le mot \"{mot}\" n'est PAS présent sur la grille.");
-                    }
-                }
+                        while (!Console.KeyAvailable && timeLimit - (DateTimeOffset.Now.ToUnixTimeSeconds() - startingTime) >= 0)
+                        {
+                            TerminalClass.ClearLine();
+                            Console.Write($"Temps restant {timeLimit - (DateTimeOffset.Now.ToUnixTimeSeconds() - startingTime)} s : " + mot);
+                            Thread.Sleep(100);
+                        }
+                        if (timeLimit - (DateTimeOffset.Now.ToUnixTimeSeconds() - startingTime) < 0) break;
 
-                
-                Jeu jeu = new Jeu(joueur1, joueur1, dico, p);
+                        keyPressed = Console.ReadKey(true);
+
+                        if (keyPressed.Key != ConsoleKey.Enter) mot += keyPressed.KeyChar;
+                    } while (keyPressed.Key != ConsoleKey.Enter);
+                    if (timeLimit - (DateTimeOffset.Now.ToUnixTimeSeconds() - startingTime) < 0) break;
+
+                } while (!jeu.motScored(mot));
                 jeu.ChangePlayer();
-
-
-                Console.WriteLine("\nAppuyez sur une touche pour continuer...");
-                Console.ReadKey();
             }
 
 
