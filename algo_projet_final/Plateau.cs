@@ -187,22 +187,22 @@ namespace algo_projet_final
         {
             mot = mot.ToUpper();
             int[,] positions = new int[mot.Length, 2];
-            bool[,] présentoupas = new bool[lignes, colonnes];
+            bool[,] visite = new bool[lignes, colonnes];
 
-            for (int i = 0; i < lignes; i++)
+            int ligneBase = lignes - 1; //  base du plateau
+
+            for (int j = 0; j < colonnes; j++)
             {
-                for (int j = 0; j < colonnes; j++)
+                if (matrice[ligneBase, j] == mot[0])
                 {
-                    if (matrice[i, j] == mot[0])
-                    {
-                        if (RechercheRec(i, j, mot, 0, positions, présentoupas))
-                            return positions;
-                    }
+                    if (RechercheRec(ligneBase, j, mot, 0, positions, visite))
+                        return positions;
                 }
             }
 
             return null;
         }
+
 
         private bool RechercheRec(int i, int j, string mot, int index,
                           int[,] pos, bool[,] présentoupas)
