@@ -180,7 +180,7 @@ namespace algo_projet_final
                 if (sr != null) sr.Close();
             }
         }
-
+       
 
         // Recherche un mot sur le plateau 
         public int[,] Recherche_Mot(string mot)

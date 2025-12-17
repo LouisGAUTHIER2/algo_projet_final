@@ -1,53 +1,81 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
+using System.Text;
 
 namespace algo_projet_final
 {
     internal class Program
     {
+        // Attributs globaux
         static Jeu jeu;
-        static long startingTime;
-        static long timeLimit = 60;
 
         static void Main(string[] args)
         {
+            // Mise en place du thème de couleur
             Console.Clear();
-            Console.WriteLine("==== CONFIGURATION =====");
-            Console.WriteLine();
+            Console.BackgroundColor = ConsoleColor.DarkBlue;
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.Clear();
 
-            List<Joueur> joueurs = new List<Joueur>();
+            // Titre
+            Console.WriteLine("╔════════════════════════════════════════════════════╗");
+            Console.WriteLine("║           BIENVENUE DANS LE JEU MOTS GLISSÉS      ║");
+            Console.WriteLine("╚════════════════════════════════════════════════════╝\n");
 
-            // Entrée des noms des joueurs (avec possibilité de quitter)
-            Joueur joueur1 = new Joueur();
-            Joueur joueur2 = new Joueur();
+            // Saisie et validation des noms de joueurs
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.Write("Entrez le nom du joueur 1 : ");
+            string nomJ1 = Console.ReadLine();
+            while (string.IsNullOrWhiteSpace(nomJ1))
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.Write("Le nom ne peut pas être vide, réessayez : ");
+                Console.ForegroundColor = ConsoleColor.Cyan;
+                nomJ1 = Console.ReadLine();
+            }
 
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.Write("Entrez le nom du joueur 2 : ");
+            string nomJ2 = Console.ReadLine();
+            while (string.IsNullOrWhiteSpace(nomJ2))
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.Write("Le nom ne peut pas être vide, réessayez : ");
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                nomJ2 = Console.ReadLine();
+            }
+
+            Joueur joueur1 = new Joueur(nomJ1);
+            Joueur joueur2 = new Joueur(nomJ2);
+
+            // Chargement du dictionnaire
+            Console.ForegroundColor = ConsoleColor.Green;
             Dictionnaire dico = new Dictionnaire("Mots_Français.txt", "francais");
 
             Plateau p = null;
             int nbLignes = 0, nbColonnes = 0;
 
-            // Choix du mode de création/import du plateau
+            // Choix du mode de plateau
             while (true)
             {
                 Console.Clear();
+                Console.BackgroundColor = ConsoleColor.DarkBlue;
+                Console.ForegroundColor = ConsoleColor.White;
                 Console.WriteLine("==== CHOIX DU MODE DE PLATEAU ====\n");
+                Console.ForegroundColor = ConsoleColor.Magenta;
                 Console.WriteLine("1. Importer un plateau depuis un fichier");
                 Console.WriteLine("2. Générer un plateau aléatoire");
+                Console.ForegroundColor = ConsoleColor.Gray;
                 Console.WriteLine("Tapez 'exit' pour quitter.");
                 Console.Write("\nVotre choix : ");
-                string mode = Console.ReadLine();
+                string mode = Console.ReadLine().Trim();
                 if (mode.ToLower() == "exit" || mode.ToLower() == "quit") return;
 
                 if (mode == "1")
                 {
-                    // Import d'un fichier CSV
-                    Console.Write("Entrez le nom du fichier CSV à importer (ou 'exit' pour quitter) : ");
+                    Console.Write("Entrez le nom du fichier CSV à importer : ");
                     string nomFichier = Console.ReadLine();
                     if (nomFichier.ToLower() == "exit" || nomFichier.ToLower() == "quit") return;
                     try
@@ -59,18 +87,18 @@ namespace algo_projet_final
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine("Erreur lors de l'import du fichier. " + ex.Message);
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine("Erreur lors de l'import du fichier : " + ex.Message);
                         Console.WriteLine("Appuyez sur une touche pour réessayer...");
                         Console.ReadKey();
                     }
                 }
                 else if (mode == "2")
                 {
-                    // Génération aléatoire
                     string cheminLettres = "Lettre.txt";
                     while (true)
                     {
-                        Console.Write("Entrez la taille de votre grille (un nombre, ou 'exit' pour quitter) : ");
+                        Console.Write("Entrez la taille de votre grille (nombre > 1) : ");
                         string saisie = Console.ReadLine();
                         if (saisie.ToLower() == "exit" || saisie.ToLower() == "quit") return;
                         if (int.TryParse(saisie, out nbLignes) && nbLignes > 1)
@@ -80,7 +108,9 @@ namespace algo_projet_final
                         }
                         else
                         {
+                            Console.ForegroundColor = ConsoleColor.Red;
                             Console.WriteLine("Entrée invalide. Veuillez entrer un nombre supérieur à 1.");
+                            Console.ForegroundColor = ConsoleColor.White;
                         }
                     }
                     p = new Plateau(cheminLettres, nbLignes, nbColonnes);
@@ -88,21 +118,24 @@ namespace algo_projet_final
                 }
                 else
                 {
+                    Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine("Choix invalide. Appuyez sur une touche pour continuer...");
                     Console.ReadKey();
                 }
             }
 
-            // Boucle de régénération du plateau si généré aléatoirement
-            if (p != null && nbLignes == nbColonnes) // seulement pour la génération aléatoire
+            // Régénération du plateau si généré aléatoirement
+            if (p != null && nbLignes == nbColonnes)
             {
                 string choix;
                 do
                 {
                     Console.Clear();
+                    Console.BackgroundColor = ConsoleColor.DarkBlue;
+                    Console.ForegroundColor = ConsoleColor.White;
                     Console.WriteLine("==== VOTRE GRILLE =====\n");
                     Console.WriteLine(p.ToString());
-                    Console.WriteLine("\nAppuyez sur 1 pour régénérer la grille, ou sur Entrer pour continuer le jeu. Tapez 'exit' pour quitter.");
+                    Console.WriteLine("\nAppuyez sur 1 pour régénérer la grille, ou Entrée pour continuer. Tapez 'exit' pour quitter.");
                     choix = Console.ReadLine();
                     if (choix.ToLower() == "exit" || choix.ToLower() == "quit") return;
                     if (choix == "1")
@@ -112,64 +145,141 @@ namespace algo_projet_final
                 } while (choix == "1");
             }
 
-            // On sort de la boucle 
-            Console.WriteLine("\nLe jeu commence...\n");
-
-            Jeu jeu = new Jeu(joueur1, joueur2, dico, p);
-            // Petite pause avant de commencer le jeu (1s)
-            Thread.Sleep(1000);
-            startingTime = DateTimeOffset.Now.ToUnixTimeSeconds();
-
-            while (DateTimeOffset.Now.ToUnixTimeSeconds() - startingTime <= timeLimit)
+            // DEMANDE DU TEMPS TOTAL ET TEMPS PAR JOUEUR
+            int tempsTotal = 0, tempsParJoueur = 0;
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            while (tempsTotal <= 0)
             {
-                //partie d'un joueur
-                Console.Clear();
-                Console.WriteLine("==== JEU DE MOTS =====");
-                Console.WriteLine(p.ToString());
-
-                Console.WriteLine($"C'est au tour de {jeu.JoueurActuel.Nom} de jouer ! Entre un mot valide ou appui sur échape pour passer ton tour.");
-
-                // on réitère jusqu'à ce que le joueur entre un mot valide ou décide de passer son tour
-                string mot = "";
-
-                do
-                {
-                    if (mot != "")
-                    {
-                        TerminalClass.ClearLine();
-                        Console.Write("Mot invalide");
-                        Thread.Sleep(1000);
-                        TerminalClass.ClearLine();
-                    }
-
-                    mot = "";
-                    ConsoleKeyInfo keyPressed;
-
-                    // on continue la boucle tant que le joueur n'a pas appuyé sur entrée ou échape
-                    do
-                    {
-                        while (!Console.KeyAvailable && timeLimit - (DateTimeOffset.Now.ToUnixTimeSeconds() - startingTime) >= 0)
-                        {
-                            TerminalClass.ClearLine();
-                            Console.Write($"Temps restant {timeLimit - (DateTimeOffset.Now.ToUnixTimeSeconds() - startingTime)} s : " + mot);
-                            Thread.Sleep(100);
-                        }
-                        if (timeLimit - (DateTimeOffset.Now.ToUnixTimeSeconds() - startingTime) < 0) break;
-
-                        keyPressed = Console.ReadKey(true);
-
-                        if (keyPressed.Key != ConsoleKey.Enter) mot += keyPressed.KeyChar;
-                    } while (keyPressed.Key != ConsoleKey.Enter);
-                    if (timeLimit - (DateTimeOffset.Now.ToUnixTimeSeconds() - startingTime) < 0) break;
-
-                } while (!jeu.motScored(mot));
-                jeu.ChangePlayer();
+                Console.Write("Entrez la durée totale de la partie (en secondes, ex: 180) : ");
+                int.TryParse(Console.ReadLine(), out tempsTotal);
+                if (tempsTotal <= 0) Console.WriteLine("Entrée invalide.");
+            }
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            while (tempsParJoueur <= 0 || tempsParJoueur > tempsTotal)
+            {
+                Console.Write("Entrez le temps maximum par joueur à chaque tour (en secondes) : ");
+                int.TryParse(Console.ReadLine(), out tempsParJoueur);
+                if (tempsParJoueur <= 0 || tempsParJoueur > tempsTotal)
+                    Console.WriteLine("Entrée invalide.");
             }
 
+            // Création du jeu
+            jeu = new Jeu(joueur1, joueur2, dico, p);
 
-            // Affichage des scores finaux
-            TerminalClass.ClearTerminal();
-            Console.WriteLine("==== SCORE FINAL ====\n");
+            // Démarrage du chrono global
+            DateTime startGlobal = DateTime.Now;
+
+
+            // Boucle principale du jeu
+            while ((DateTime.Now - startGlobal).TotalSeconds < tempsTotal )
+            {
+                // Gestion du chrono par joueur
+                DateTime tourStart = DateTime.Now;
+                int tempsRestant = tempsParJoueur;
+                bool motValide = false;
+                string mot = "";
+
+                // Affichage plateau et infos
+                Console.Clear();
+                Console.BackgroundColor = ConsoleColor.DarkBlue;
+                if (jeu.JoueurActuel == joueur1)
+                    Console.ForegroundColor = ConsoleColor.Cyan;
+                else
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+
+                Console.WriteLine("==== JEU DE MOTS =====");
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.WriteLine(p.ToString());
+                Console.WriteLine($"\nTour de {jeu.JoueurActuel.Nom} ({jeu.JoueurActuel.MotsTrouves.Count} mots trouvés, {jeu.JoueurActuel.Score} points)");
+                Console.WriteLine($"Temps restant pour ce tour : {tempsRestant} s");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.WriteLine("Tapez votre mot (Entrée pour valider, Echap pour passer)");
+
+                // Saisie du mot avec gestion des corrections (Backspace)
+                StringBuilder input = new StringBuilder();
+                Console.ForegroundColor = ConsoleColor.White;
+
+                while ((DateTime.Now - tourStart).TotalSeconds < tempsParJoueur)
+                {
+                    Console.SetCursorPosition(0, Console.CursorTop);
+                    Console.Write("Mot : " + input.ToString() + " ");
+                    int left = Console.CursorLeft;
+                    int top = Console.CursorTop;
+
+                    // Affiche le chrono du tour en direct
+                    Console.ForegroundColor = ConsoleColor.Gray;
+                    Console.Write($"  Temps restant: {tempsParJoueur - (int)(DateTime.Now - tourStart).TotalSeconds}s   ");
+                    Console.ForegroundColor = ConsoleColor.White;
+                    Console.SetCursorPosition(left, top);
+
+                    // Lecture de touche sans bloquer le timer
+                    if (Console.KeyAvailable)
+                    {
+                        var key = Console.ReadKey(true);
+                        if (key.Key == ConsoleKey.Enter)
+                        {
+                            mot = input.ToString();
+                            break;
+                        }
+                        else if (key.Key == ConsoleKey.Escape)
+                        {
+                            mot = "";
+                            break;
+                        }
+                        else if (key.Key == ConsoleKey.Backspace)
+                        {
+                            if (input.Length > 0)
+                            {
+                                input.Length--;
+                                // Efface le dernier caractère à l'écran
+                                Console.SetCursorPosition(5 + input.Length, Console.CursorTop);
+                                Console.Write(" ");
+                                Console.SetCursorPosition(5 + input.Length, Console.CursorTop);
+                            }
+                        }
+                        else if (char.IsLetter(key.KeyChar) && input.Length < 30)
+                        {
+                            input.Append(char.ToLower(key.KeyChar));
+                        }
+                    }
+                    Thread.Sleep(50);
+                }
+
+                // Si temps écoulé sans validation, on passe au joueur suivant
+                if (string.IsNullOrWhiteSpace(mot))
+                {
+                    Console.ForegroundColor = ConsoleColor.Magenta;
+                    Console.WriteLine("\nVous avez passé votre tour !");
+                    Thread.Sleep(1000);
+                    jeu.ChangePlayer();
+                    continue;
+                }
+
+                // Validation du mot (selon ta logique de jeu)
+                if (!jeu.motScored(mot))
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("\nMot invalide ou déjà trouvé !");
+                    Thread.Sleep(1400);
+                    continue; // le joueur rejoue tant qu'il ne donne pas un mot valide ou passe
+                }
+                else
+                {
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.WriteLine("\nMot validé !");
+                    Console.WriteLine("Score de " + jeu.JoueurActuel.Nom + " = " + jeu.JoueurActuel.Score);
+                    Thread.Sleep(1300);
+                    jeu.ChangePlayer();
+                }
+            }
+
+            // FIN DE PARTIE
+            Console.Clear();
+            Console.BackgroundColor = ConsoleColor.DarkBlue;
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.WriteLine("╔═════════════════════════════════╗");
+            Console.WriteLine("║          SCORE FINAL            ║");
+            Console.WriteLine("╚═════════════════════════════════╝\n");
             joueur1.AfficherInfos();
             joueur2.AfficherInfos();
 
@@ -181,6 +291,8 @@ namespace algo_projet_final
             else
                 Console.WriteLine("Match nul ! Les deux joueurs sont à égalité.");
 
+            Console.ResetColor();
+            Console.WriteLine("\nAppuyez sur une touche pour quitter...");
             Console.ReadKey();
         }
     }
