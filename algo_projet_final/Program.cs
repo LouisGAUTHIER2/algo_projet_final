@@ -15,7 +15,7 @@ namespace algo_projet_final
         {
             // Mise en place du thème de couleur
             Console.Clear();
-            Console.BackgroundColor = ConsoleColor.DarkBlue;
+            Console.BackgroundColor = ConsoleColor.DarkBlue ;
             Console.ForegroundColor = ConsoleColor.White;
             Console.Clear();
 
