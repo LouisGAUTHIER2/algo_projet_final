@@ -185,6 +185,8 @@ namespace algo_projet_final
         // Recherche un mot sur le plateau 
         public int[,] Recherche_Mot(string mot)
         {
+            if (mot == "") return null;
+            
             mot = mot.ToUpper();
             int[,] positions = new int[mot.Length, 2];
             bool[,] visite = new bool[lignes, colonnes];
