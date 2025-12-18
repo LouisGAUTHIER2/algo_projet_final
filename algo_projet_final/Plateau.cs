@@ -140,31 +140,19 @@ namespace algo_projet_final
         // Charge le plateau d'un fichier csv
         public void ToRead(string nomfile)
         {
-            StreamReader sr = null;
             try
             {
-                sr = new StreamReader(nomfile);
-                string ligne;
-                // On compte le nombre de lignes et de colonnes
-                int newligne = 0;
-                int newcolonne = 0;
-                string[] lignesv2 = new string[100]; // suppose max 100 lignes
+                string[] lignesCSV = File.ReadAllLines(nomfile);
 
-                while ((ligne = sr.ReadLine()) != null)
-                {
-                    lignesv2[newligne] = ligne;
-                    newligne++;
-                }
-                if (newligne > 0)
-                    newcolonne = lignesv2[0].Split(';').Length;
+                lignes = lignesCSV.Length;
+                colonnes = lignesCSV[0].Split(';').Length;
 
-                lignes = newligne;
-                colonnes = newcolonne;
                 matrice = new char[lignes, colonnes];
 
                 for (int i = 0; i < lignes; i++)
                 {
-                    string[] casesLigne = lignesv2[i].Split(';');
+                    string[] casesLigne = lignesCSV[i].Split(';');
+
                     for (int j = 0; j < colonnes; j++)
                     {
                         matrice[i, j] = casesLigne[j][0];
@@ -175,12 +163,9 @@ namespace algo_projet_final
             {
                 Console.WriteLine("Erreur de lecture du plateau : " + ex.Message);
             }
-            finally
-            {
-                if (sr != null) sr.Close();
-            }
         }
-       
+
+
 
         // Recherche un mot sur le plateau 
         public int[,] Recherche_Mot(string mot)
@@ -207,9 +192,9 @@ namespace algo_projet_final
 
 
         private bool RechercheRec(int i, int j, string mot, int index,
-                          int[,] pos, bool[,] présentoupas)
+                             int[,] pos, bool[,] présentoupas)
         {
-            // mot déjà trouvé
+            // mot trouvé
             if (index == mot.Length)
                 return true;
 
@@ -217,24 +202,29 @@ namespace algo_projet_final
             if (i < 0 || i >= lignes || j < 0 || j >= colonnes)
                 return false;
 
-      
-            // lettre incorrecte
+            // déjà utilisée
+            if (présentoupas[i, j])
+                return false;
+
+            // mauvaise lettre
             if (matrice[i, j] != mot[index])
                 return false;
 
-            // marquer la case qu'on vient de faire
+            // marquer
             présentoupas[i, j] = true;
             pos[index, 0] = i;
-            pos[index, 1] = j; 
+            pos[index, 1] = j;
 
-            // déplacementq sur la grille
+            // déplacements
             if (RechercheRec(i - 1, j, mot, index + 1, pos, présentoupas) ||
                 RechercheRec(i + 1, j, mot, index + 1, pos, présentoupas) ||
                 RechercheRec(i, j - 1, mot, index + 1, pos, présentoupas) ||
-                RechercheRec(i, j + 1, mot, index + 1, pos, présentoupas))
-            {
+                RechercheRec(i, j + 1, mot, index + 1, pos, présentoupas) ||
+                RechercheRec(i - 1, j - 1, mot, index + 1, pos, présentoupas) ||
+                RechercheRec(i + 1, j + 1, mot, index + 1, pos, présentoupas) ||
+                RechercheRec(i - 1, j + 1, mot, index + 1, pos, présentoupas) ||
+                RechercheRec(i + 1, j - 1, mot, index + 1, pos, présentoupas))
                 return true;
-            }
 
             // retour arrière
             présentoupas[i, j] = false;
