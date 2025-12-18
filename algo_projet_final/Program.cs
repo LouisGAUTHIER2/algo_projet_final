@@ -37,7 +37,7 @@ namespace algo_projet_final
                 nomJ1 = Console.ReadLine();
             }
 
-            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.ForegroundColor = ConsoleColor.Cyan;
             Console.Write("Entrez le nom du joueur 2 : ");
             string nomJ2 = Console.ReadLine();
             while (string.IsNullOrWhiteSpace(nomJ2))
@@ -63,10 +63,10 @@ namespace algo_projet_final
             Console.BackgroundColor = ConsoleColor.DarkBlue;
             Console.ForegroundColor = ConsoleColor.White;
             Console.WriteLine("==== CHOIX DU MODE DE PLATEAU ====\n");
-            Console.ForegroundColor = ConsoleColor.Black;
+            Console.ForegroundColor = ConsoleColor.White;
             Console.WriteLine("1. Importer un plateau depuis un fichier");
             Console.WriteLine("2. Générer un plateau aléatoire");
-            Console.ForegroundColor = ConsoleColor.Gray;
+            Console.ForegroundColor = ConsoleColor.White;
             Console.WriteLine("Tapez échape' pour quitter.");
 
             while (true)
@@ -195,6 +195,7 @@ namespace algo_projet_final
 
                 while ((DateTime.Now - tourStart).TotalSeconds < tempsParJoueur)
                 {
+                    TerminalClass.ClearLine();
                     Console.SetCursorPosition(0, Console.CursorTop);
                     Console.Write("Mot : " + input.ToString() + " ");
                     int left = Console.CursorLeft;
@@ -202,7 +203,7 @@ namespace algo_projet_final
 
                     // Affiche le chrono du tour en direct
                     Console.ForegroundColor = ConsoleColor.Gray;
-                    Console.Write($"  Temps restant: {tempsParJoueur - (int)(DateTime.Now - tourStart).TotalSeconds}s   ");
+                    Console.Write($"  Temps restant: {tempsParJoueur - (int)(DateTime.Now - tourStart).TotalSeconds}s, temps total restant {tempsTotal - (int)(DateTime.Now - startGlobal).TotalSeconds}s");
                     Console.ForegroundColor = ConsoleColor.White;
                     Console.SetCursorPosition(left, top);
 
