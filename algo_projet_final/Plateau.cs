@@ -122,7 +122,7 @@ namespace algo_projet_final
                     for (int j = 0; j < colonnes; j++)
                     {
                         sw.Write(matrice[i, j]);
-                        if (j < colonnes - 1) sw.Write(',');
+                        if (j < colonnes - 1) sw.Write(';');
                     }
                     sw.WriteLine();
                 }

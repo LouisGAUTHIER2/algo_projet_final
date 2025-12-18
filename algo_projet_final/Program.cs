@@ -291,7 +291,33 @@ namespace algo_projet_final
             else
                 Console.WriteLine("Match nul ! Les deux joueurs sont à égalité.");
 
-            Console.ResetColor();
+
+
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.Write("\nVoulez-vous sauvegarder la grille pour plus tard ? (o/n) : ");
+            string reponse = Console.ReadLine().Trim().ToLower();
+
+            if (reponse == "o" || reponse == "oui")
+            {
+                Console.Write("Nom du fichier CSV (ex: grille.csv) : ");
+                string nomFichier = Console.ReadLine();
+
+                try
+                {
+                    p.ToFile(nomFichier);
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.WriteLine("Grille sauvegardée avec succès !");
+                }
+                catch
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("Erreur lors de la sauvegarde.");
+                }
+            }
+
+
+
+            Console.ForegroundColor= ConsoleColor.White;
             Console.WriteLine("\nAppuyez sur une touche pour quitter...");
             Console.ReadKey();
         }
