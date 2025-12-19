@@ -17,6 +17,8 @@ namespace algo_projet_final
             Console.WriteLine("==== TESTS UNITAIRES ====\n");
             Dictionnaire.TestUnitaire();
             Plateau.TestUnitairePlateau();
+            Jeu.TestUnitaire();
+            Joueur.TestUnitaire();
 
             Thread.Sleep(5000);
 
