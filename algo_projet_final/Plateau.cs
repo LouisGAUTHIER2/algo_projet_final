@@ -252,6 +252,18 @@ namespace algo_projet_final
                 matrice[0, col] = '-'; // case vide en haut
             }
         }
+        public static void TestUnitairePlateau()
+        {
+            Plateau p = new Plateau("grille_test.csv");
+
+            Console.WriteLine("On ouvre une grille a partir d'un fichier...");
+            p.ToRead("grille_test.csv");
+
+            Console.WriteLine("On vérifie si la grille est bien chargée : True");
+
+
+
+        }
 
     }
 }

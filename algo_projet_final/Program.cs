@@ -16,6 +16,9 @@ namespace algo_projet_final
             // Test unitaire
             Console.WriteLine("==== TESTS UNITAIRES ====\n");
             Dictionnaire.TestUnitaire();
+            Plateau.TestUnitairePlateau();
+
+            Thread.Sleep(5000);
 
             // Mise en place du thème de couleur
             Console.Clear();
