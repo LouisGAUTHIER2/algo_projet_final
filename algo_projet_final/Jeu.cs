@@ -63,6 +63,16 @@ namespace algo_projet_final
         public static void TestUnitaire()
         {
             Console.WriteLine("On crée les classes nécessaires à la class jeu.");
+            Joueur j1 = new Joueur("Alice");
+            Joueur j2 = new Joueur("Bob");
+            Dictionnaire dico = new Dictionnaire("Mots_Français.txt", "Français");
+
+            Jeu jeu = new Jeu(j1, j2, dico, new Plateau("Lettre.txt",10,10));
+
+            Console.WriteLine("On teste le changement de joueur.");
+            Console.WriteLine("Joueur initial : " + jeu.JoueurActuel.Nom);
+            jeu.ChangePlayer();
+            Console.WriteLine("Nouveau joueur : " + jeu.JoueurActuel.Nom);
         }
     }
 }
