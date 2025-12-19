@@ -13,6 +13,10 @@ namespace algo_projet_final
 
         static void Main(string[] args)
         {
+            // Test unitaire
+            Console.WriteLine("==== TESTS UNITAIRES ====\n");
+            Dictionnaire.TestUnitaire();
+
             // Mise en place du thème de couleur
             Console.Clear();
             Console.BackgroundColor = ConsoleColor.DarkBlue;

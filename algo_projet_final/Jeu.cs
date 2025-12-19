@@ -59,5 +59,10 @@ namespace algo_projet_final
         {
             get { return joueur2; }
         }
+
+        public static void TestUnitaire()
+        {
+            Console.WriteLine("On crée les classes nécessaires à la class jeu.");
+        }
     }
 }
