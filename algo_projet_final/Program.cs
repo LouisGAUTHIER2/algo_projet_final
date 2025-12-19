@@ -14,6 +14,7 @@ namespace algo_projet_final
         static void Main(string[] args)
         {
             // Mise en place du thème de couleur
+            TerminalClass.init();
             Console.Clear();
             Console.BackgroundColor = ConsoleColor.DarkBlue;
             Console.ForegroundColor = ConsoleColor.White;
@@ -36,7 +37,7 @@ namespace algo_projet_final
                 nomJ1 = Console.ReadLine();
             }
 
-            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.ForegroundColor = ConsoleColor.Cyan;
             Console.Write("Entrez le nom du joueur 2 : ");
             string nomJ2 = Console.ReadLine();
             while (string.IsNullOrWhiteSpace(nomJ2))
@@ -58,26 +59,26 @@ namespace algo_projet_final
             int nbLignes = 0, nbColonnes = 0;
 
             // Choix du mode de plateau
+            Console.Clear();
+            Console.BackgroundColor = ConsoleColor.DarkBlue;
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.WriteLine("==== CHOIX DU MODE DE PLATEAU ====\n");
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.WriteLine("1. Importer un plateau depuis un fichier");
+            Console.WriteLine("2. Générer un plateau aléatoire");
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.WriteLine("Tapez échape' pour quitter.");
+
             while (true)
             {
-                Console.Clear();
-                Console.BackgroundColor = ConsoleColor.DarkBlue;
-                Console.ForegroundColor = ConsoleColor.White;
-                Console.WriteLine("==== CHOIX DU MODE DE PLATEAU ====\n");
-                Console.ForegroundColor = ConsoleColor.Black;
-                Console.WriteLine("1. Importer un plateau depuis un fichier");
-                Console.WriteLine("2. Générer un plateau aléatoire");
-                Console.ForegroundColor = ConsoleColor.Gray;
-                Console.WriteLine("Tapez 'exit' pour quitter.");
-                Console.Write("\nVotre choix : ");
-                string mode = Console.ReadLine().Trim();
-                if (mode.ToLower() == "exit" || mode.ToLower() == "quit") return;
+                ConsoleKeyInfo mode = Console.ReadKey(true);
+                if (mode.Key == ConsoleKey.Escape) return;
 
-                if (mode == "1")
+                if (mode.KeyChar == '1')
                 {
                     Console.Write("Entrez le nom du fichier CSV à importer : ");
                     string nomFichier = Console.ReadLine();
-                    if (nomFichier.ToLower() == "exit" || nomFichier.ToLower() == "quit") return;
+
                     try
                     {
                         p = new Plateau(nomFichier);
@@ -93,14 +94,14 @@ namespace algo_projet_final
                         Console.ReadKey();
                     }
                 }
-                else if (mode == "2")
+                else if (mode.KeyChar == '2')
                 {
                     string cheminLettres = "Lettre.txt";
                     while (true)
                     {
                         Console.Write("Entrez la taille de votre grille (nombre > 1) : ");
                         string saisie = Console.ReadLine();
-                        if (saisie.ToLower() == "exit" || saisie.ToLower() == "quit") return;
+
                         if (int.TryParse(saisie, out nbLignes) && nbLignes > 1)
                         {
                             nbColonnes = nbLignes;
@@ -116,18 +117,12 @@ namespace algo_projet_final
                     p = new Plateau(cheminLettres, nbLignes, nbColonnes);
                     break;
                 }
-                else
-                {
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine("Choix invalide. Appuyez sur une touche pour continuer...");
-                    Console.ReadKey();
-                }
             }
 
             // Régénération du plateau si généré aléatoirement
             if (p != null && nbLignes == nbColonnes)
             {
-                string choix;
+                ConsoleKeyInfo choix;
                 do
                 {
                     Console.Clear();
@@ -135,14 +130,13 @@ namespace algo_projet_final
                     Console.ForegroundColor = ConsoleColor.White;
                     Console.WriteLine("==== VOTRE GRILLE =====\n");
                     Console.WriteLine(p.ToString());
-                    Console.WriteLine("\nAppuyez sur 1 pour régénérer la grille, ou Entrée pour continuer. Tapez 'exit' pour quitter.");
-                    choix = Console.ReadLine();
-                    if (choix.ToLower() == "exit" || choix.ToLower() == "quit") return;
-                    if (choix == "1")
+                    Console.WriteLine("\nAppuyez sur <- pour régénérer la grille, ou Entrée pour continuer.");
+                    choix = Console.ReadKey(true);
+                    if (choix.Key ==ConsoleKey.Backspace)
                     {
                         p = new Plateau("Lettre.txt", nbLignes, nbColonnes);
                     }
-                } while (choix == "1");
+                } while (choix.Key == ConsoleKey.Backspace);
             }
 
             // DEMANDE DU TEMPS TOTAL ET TEMPS PAR JOUEUR
@@ -201,6 +195,7 @@ namespace algo_projet_final
 
                 while ((DateTime.Now - tourStart).TotalSeconds < tempsParJoueur)
                 {
+                    TerminalClass.ClearLine();
                     Console.SetCursorPosition(0, Console.CursorTop);
                     Console.Write("Mot : " + input.ToString() + " ");
                     int left = Console.CursorLeft;
@@ -208,7 +203,7 @@ namespace algo_projet_final
 
                     // Affiche le chrono du tour en direct
                     Console.ForegroundColor = ConsoleColor.Gray;
-                    Console.Write($"  Temps restant: {tempsParJoueur - (int)(DateTime.Now - tourStart).TotalSeconds}s   ");
+                    Console.Write($"  Temps restant: {tempsParJoueur - (int)(DateTime.Now - tourStart).TotalSeconds}s, temps total restant {tempsTotal - (int)(DateTime.Now - startGlobal).TotalSeconds}s");
                     Console.ForegroundColor = ConsoleColor.White;
                     Console.SetCursorPosition(left, top);
 
