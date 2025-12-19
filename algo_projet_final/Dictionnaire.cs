@@ -131,5 +131,18 @@ namespace algo_projet_final
                 Console.WriteLine(mots[i]);
             }
         }
+
+        public static void TestUnitaire()
+        {
+            Dictionnaire dico = new Dictionnaire("Mots_Français.txt", "Français");
+
+            Console.WriteLine("On tri le dictionnaire...");
+            dico.Tri_quick_sort();
+
+            Console.WriteLine("On vérifie si 'ARBRE' est dans le dictionnaire : " + dico.RechDichoRecursif("ARBRE"));
+            Console.WriteLine("On vérifie si 'ZIG' est dans le dictionnaire : " + dico.RechDichoRecursif("ZIG"));
+
+
+        }
     }
 }
