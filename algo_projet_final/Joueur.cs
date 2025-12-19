@@ -93,6 +93,23 @@ namespace algo_projet_final
         {
             return $"Nom: {Nom}, Score: {Score}, Mots Trouvés: {(MotsTrouves.Count > 0 ? string.Join(", ", MotsTrouves) : "Aucun")}";
         }
+
+        public static void TestUnitaire()
+        {
+            Console.WriteLine("Création d'un joueur nommé 'TestJoueur'.");
+            Joueur joueur = new Joueur("TestJoueur");
+
+            Console.WriteLine("Ajout du mot 'exemple' au joueur.");
+            joueur.Add_Mot("exemple");
+            Console.WriteLine("Le joueur contient-il le mot 'exemple' ? " + joueur.Contient("exemple"));
+
+            Console.WriteLine("Ajout du score pour le mot 'exemple'.");
+            joueur.Add_Score("exemple");
+            Console.WriteLine("Score actuel du joueur : " + joueur.Score);
+
+            Console.WriteLine("Affichage des informations du joueur :");
+            joueur.AfficherInfos();
+        }
     }
 }
 
