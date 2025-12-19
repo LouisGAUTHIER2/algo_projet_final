@@ -14,7 +14,6 @@ namespace algo_projet_final
         static void Main(string[] args)
         {
             // Mise en place du thème de couleur
-            TerminalClass.init();
             Console.Clear();
             Console.BackgroundColor = ConsoleColor.DarkBlue;
             Console.ForegroundColor = ConsoleColor.White;
